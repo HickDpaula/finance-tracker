@@ -1,0 +1,26 @@
+# Claude Code / AI agent tooling (kept local, never pushed)
+.claude/
+
+# Markdown docs are local-only, except README files
+*.md
+!README.md
+!**/README.md
+
+# .NET
+**/bin/
+**/obj/
+**/.vs/
+*.user
+
+# Node / frontend
+**/node_modules/
+**/dist/
+**/dist-ssr/
+
+# Environment / secrets
+*.env
+.env.*
+
+# OS
+.DS_Store
+Thumbs.db
