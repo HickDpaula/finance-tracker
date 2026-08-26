@@ -5,7 +5,10 @@ using Microsoft.AspNetCore.Identity;
 
 namespace FinanceTracker.Api.Services;
 
-public class AuthService(IUserRepository userRepository, IPasswordHasher<User> passwordHasher) : IAuthService
+public class AuthService(
+    IUserRepository userRepository,
+    IPasswordHasher<User> passwordHasher,
+    ITokenService tokenService) : IAuthService
 {
     public async Task<UserResponseDto> RegisterAsync(RegisterUserDto request)
     {
@@ -26,5 +29,22 @@ public class AuthService(IUserRepository userRepository, IPasswordHasher<User> p
         await userRepository.AddAsync(user);
 
         return new UserResponseDto(user.Id, user.Name, user.Email);
+    }
+
+    public async Task<LoginResponseDto> LoginAsync(LoginUserDto request)
+    {
+        var user = await userRepository.GetByEmailAsync(request.Email);
+        if (user is null)
+        {
+            throw new UnauthorizedAccessException("Invalid email or password.");
+        }
+
+        var result = passwordHasher.VerifyHashedPassword(user, user.PasswordHash, request.Password);
+        if (result == PasswordVerificationResult.Failed)
+        {
+            throw new UnauthorizedAccessException("Invalid email or password.");
+        }
+
+        return tokenService.GenerateToken(user);
     }
 }
