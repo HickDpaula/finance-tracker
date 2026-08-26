@@ -32,6 +32,14 @@ builder.Services.AddScoped<ITransactionService, TransactionService>();
 
 builder.Services.AddScoped<IDashboardService, DashboardService>();
 
+const string FrontendCorsPolicy = "Frontend";
+var corsOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>() ?? [];
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(FrontendCorsPolicy, policy =>
+        policy.WithOrigins(corsOrigins).AllowAnyHeader().AllowAnyMethod());
+});
+
 var jwtSection = builder.Configuration.GetSection("Jwt");
 builder.Services
     .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -59,6 +67,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors(FrontendCorsPolicy);
 
 app.UseAuthentication();
 app.UseAuthorization();
