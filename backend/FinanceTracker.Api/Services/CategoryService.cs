@@ -1,6 +1,7 @@
 using FinanceTracker.Api.DTOs;
 using FinanceTracker.Api.Models;
 using FinanceTracker.Api.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace FinanceTracker.Api.Services;
 
@@ -53,7 +54,14 @@ public class CategoryService(ICategoryRepository categoryRepository) : ICategory
         var category = await categoryRepository.GetByIdAsync(categoryId, userId)
             ?? throw new KeyNotFoundException("Category not found.");
 
-        await categoryRepository.DeleteAsync(category);
+        try
+        {
+            await categoryRepository.DeleteAsync(category);
+        }
+        catch (DbUpdateException)
+        {
+            throw new InvalidOperationException("Cannot delete a category that has transactions.");
+        }
     }
 
     private static CategoryResponseDto ToDto(Category category) => new(category.Id, category.Name);
