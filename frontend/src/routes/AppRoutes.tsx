@@ -2,6 +2,8 @@ import { Navigate, Route, Routes } from 'react-router-dom'
 import { AppLayout } from '../components/layout/AppLayout'
 import { ProtectedRoute } from '../components/ProtectedRoute'
 import { DashboardPage } from '../pages/DashboardPage'
+import { ExpensesPage } from '../pages/ExpensesPage'
+import { IncomePage } from '../pages/IncomePage'
 import { LoginPage } from '../pages/LoginPage'
 import { PlaceholderPage } from '../pages/PlaceholderPage'
 import { RegisterPage } from '../pages/RegisterPage'
@@ -14,8 +16,8 @@ export function AppRoutes() {
       <Route element={<ProtectedRoute />}>
         <Route element={<AppLayout />}>
           <Route path="/" element={<DashboardPage />} />
-          <Route path="/expenses" element={<PlaceholderPage title="Expenses" />} />
-          <Route path="/income" element={<PlaceholderPage title="Income" />} />
+          <Route path="/expenses" element={<ExpensesPage />} />
+          <Route path="/income" element={<IncomePage />} />
           <Route path="/categories" element={<PlaceholderPage title="Categories" />} />
         </Route>
       </Route>

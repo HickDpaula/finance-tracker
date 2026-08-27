@@ -15,3 +15,11 @@ export interface TransactionFilter {
   to?: string
   categoryId?: string
 }
+
+export interface TransactionRequest {
+  description: string
+  amount: number
+  type: TransactionType
+  date: string
+  categoryId: string
+}
