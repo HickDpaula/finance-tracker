@@ -1,10 +1,10 @@
 import { useState, type FormEvent } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { useAuth } from '../context/AuthContext'
-import { ApiError } from '../services/httpClient'
+import { useAppDispatch } from '../store/hooks'
+import { loginThunk } from '../store/authSlice'
 
 export function LoginPage() {
-  const { login } = useAuth()
+  const dispatch = useAppDispatch()
   const navigate = useNavigate()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -16,10 +16,10 @@ export function LoginPage() {
     setError(null)
     setIsSubmitting(true)
     try {
-      await login({ email, password })
+      await dispatch(loginThunk({ email, password })).unwrap()
       navigate('/')
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : 'Não foi possível entrar.')
+      setError(typeof err === 'string' ? err : 'Não foi possível entrar.')
     } finally {
       setIsSubmitting(false)
     }

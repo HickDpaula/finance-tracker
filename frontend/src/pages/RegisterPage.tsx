@@ -1,10 +1,10 @@
 import { useState, type FormEvent } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { useAuth } from '../context/AuthContext'
-import { ApiError } from '../services/httpClient'
+import { useAppDispatch } from '../store/hooks'
+import { registerThunk } from '../store/authSlice'
 
 export function RegisterPage() {
-  const { register } = useAuth()
+  const dispatch = useAppDispatch()
   const navigate = useNavigate()
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
@@ -17,10 +17,10 @@ export function RegisterPage() {
     setError(null)
     setIsSubmitting(true)
     try {
-      await register({ name, email, password })
+      await dispatch(registerThunk({ name, email, password })).unwrap()
       navigate('/login')
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : 'Não foi possível criar a conta.')
+      setError(typeof err === 'string' ? err : 'Não foi possível criar a conta.')
     } finally {
       setIsSubmitting(false)
     }
