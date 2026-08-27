@@ -1,7 +1,9 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
+import { AppLayout } from '../components/layout/AppLayout'
 import { ProtectedRoute } from '../components/ProtectedRoute'
 import { DashboardPage } from '../pages/DashboardPage'
 import { LoginPage } from '../pages/LoginPage'
+import { PlaceholderPage } from '../pages/PlaceholderPage'
 import { RegisterPage } from '../pages/RegisterPage'
 
 export function AppRoutes() {
@@ -10,7 +12,12 @@ export function AppRoutes() {
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
       <Route element={<ProtectedRoute />}>
-        <Route path="/" element={<DashboardPage />} />
+        <Route element={<AppLayout />}>
+          <Route path="/" element={<DashboardPage />} />
+          <Route path="/expenses" element={<PlaceholderPage title="Expenses" />} />
+          <Route path="/income" element={<PlaceholderPage title="Income" />} />
+          <Route path="/categories" element={<PlaceholderPage title="Categories" />} />
+        </Route>
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
